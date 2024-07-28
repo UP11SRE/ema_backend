@@ -17,7 +17,7 @@ COPY . /app/
 EXPOSE 8000
 
 # Set environment variables
-ENV DJANGO_SETTINGS_MODULE=myproject.settings
+ENV DJANGO_SETTINGS_MODULE=ema_backend.settings
 ENV PYTHONUNBUFFERED=1
 
 # Run the Django development server

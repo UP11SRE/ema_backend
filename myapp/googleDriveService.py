@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+CREDENTIALS_PATH = '/etc/secrets/credentials.json'
 
 def get_drive_service(user):
   creds = None

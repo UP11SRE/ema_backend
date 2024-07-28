@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.http import MediaIoBaseDownload
@@ -16,26 +17,45 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 CREDENTIALS_PATH = '/etc/secrets/credentials.json'
 
 def get_drive_service(user):
-  creds = None
-  user_id = user.id  # Use user ID or user.email for unique identification
-  pickle_path = f'token_{user_id}.pickle'
+  # creds = None
+  # user_id = user.id  # Use user ID or user.email for unique identification
+  # pickle_path = f'token_{user_id}.pickle'
 
-  # Load credentials from pickle file if it exists
-  if os.path.exists(pickle_path):
-      with open(pickle_path, 'rb') as token:
-          creds = pickle.load(token)
+  # # Load credentials from pickle file if it exists
+  # if os.path.exists(pickle_path):
+  #     with open(pickle_path, 'rb') as token:
+  #         creds = pickle.load(token)
+
+  # # If there are no (valid) credentials available, let the user log in.
+  # if not creds or not creds.valid:
+  #     if creds and creds.expired and creds.refresh_token:
+  #         creds.refresh(Request())
+  #     else:
+  #         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+  #         creds = flow.run_local_server(port=8001)
+  #     # Save the credentials for the next run
+  #     with open(pickle_path, 'wb') as token:
+  #         pickle.dump(creds, token)
+
+  # service = build('drive', 'v3', credentials=creds)
+  # return service
+  if user and user.google_drive_credentials:
+      creds = Credentials.from_authorized_user_info(user.google_drive_credentials, SCOPES)
 
   # If there are no (valid) credentials available, let the user log in.
   if not creds or not creds.valid:
       if creds and creds.expired and creds.refresh_token:
           creds.refresh(Request())
       else:
-          flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-          creds = flow.run_local_server(port=8001)
-      # Save the credentials for the next run
-      with open(pickle_path, 'wb') as token:
-          pickle.dump(creds, token)
+          flow = Flow.from_client_secrets_file(
+              CREDENTIALS_PATH,
+              scopes=SCOPES,
+              redirect_uri=os.getenv('GOOGLE_REDIRECT_URI')
+          )
+          authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+          return authorization_url  # Redirect the user to this URL for authentication
 
+  # Build the Google Drive service
   service = build('drive', 'v3', credentials=creds)
   return service
 

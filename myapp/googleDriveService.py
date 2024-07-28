@@ -2,6 +2,7 @@
 import io
 import pickle
 import os
+from dotenv import load_dotenv
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
@@ -12,7 +13,7 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-CREDENTIALS_PATH = 'credentials.json'
+CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 def get_drive_service(user):
   creds = None

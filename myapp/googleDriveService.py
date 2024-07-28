@@ -3,7 +3,6 @@ import io
 import pickle
 import os
 from dotenv import load_dotenv
-from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
@@ -17,36 +16,27 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 CREDENTIALS_PATH = '/etc/secrets/credentials.json'
 
 def get_drive_service(user):
-  # creds = None
-  # user_id = user.id  # Use user ID or user.email for unique identification
-  # pickle_path = f'token_{user_id}.pickle'
+  creds = None
+  user_id = user.id  # Use user ID or user.email for unique identification
+  pickle_path = f'token_{user_id}.pickle'
 
-  # # Load credentials from pickle file if it exists
-  # if os.path.exists(pickle_path):
-  #     with open(pickle_path, 'rb') as token:
-  #         creds = pickle.load(token)
+  # Load credentials from pickle file if it exists
+  if os.path.exists(pickle_path):
+      with open(pickle_path, 'rb') as token:
+          creds = pickle.load(token)
 
-  # # If there are no (valid) credentials available, let the user log in.
-  # if not creds or not creds.valid:
-  #     if creds and creds.expired and creds.refresh_token:
-  #         creds.refresh(Request())
-  #     else:
-  #         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-  #         creds = flow.run_local_server(port=8001)
-  #     # Save the credentials for the next run
-  #     with open(pickle_path, 'wb') as token:
-  #         pickle.dump(creds, token)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+      if creds and creds.expired and creds.refresh_token:
+          creds.refresh(Request())
+      else:
+          flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+          creds = flow.run_local_server(port=8001)
+      # Save the credentials for the next run
+      with open(pickle_path, 'wb') as token:
+          pickle.dump(creds, token)
 
-  # service = build('drive', 'v3', credentials=creds)
-  # return service
-  service_account_file = '/etc/secrets/credentials.json'  # Adjust the filename as necessary
-
-  # Load the service account credentials
-  credentials = service_account.Credentials.from_service_account_file(
-      service_account_file, scopes=SCOPES)
-  
-  # Build the Google Drive service
-  service = build('drive', 'v3', credentials=credentials)
+  service = build('drive', 'v3', credentials=creds)
   return service
 
 def check_file_permissions(file_id, user):

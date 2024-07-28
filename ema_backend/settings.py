@@ -28,6 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'ema-backend.onrender.com'
 
 ]
 

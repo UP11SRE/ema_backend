@@ -35,7 +35,7 @@ This project is the backend application for the Google Drive File Picker and rea
 1. **Clone this repository**:
 
    git clone <https://github.com/UP11SRE/ema_backend.git>
-   cd ema-backend
+   cd ema_backend
 
 2. **Create a virtual environment**:
 

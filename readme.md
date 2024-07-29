@@ -32,47 +32,50 @@ This project is the backend application for the Google Drive File Picker and rea
 
 ### Installation
 
-1. Clone this repository.
-   bash
-   git clone <repository-url>
+1. **Clone this repository**:
+
+   git clone <https://github.com/UP11SRE/ema_backend.git>
    cd ema-backend
 
-2. Install dependencies:
-   bash
+2. **Create a virtual environment**:
+
+   python -m venv venv
+
+3. **Activate the virtual environment**:
+
+   - On Windows:
+
+     ```
+
+     venv\Scripts\activate
+
+     ```
+
+   - On macOS/Linux:
+
+     ```
+
+     source venv/bin/activate
+     ```
+
+4. **Install dependencies**:
+
    pip install -r requirements.txt
 
-3. Set up environment variables:
+5. **Set up environment variables**:
    - Create a `.env` file in the project root and add your Google Drive API credentials.
 
 ### Running the Development Server
 
-1. Run database migrations:
-   bash
+1. **Run database migrations**:
+
    python manage.py migrate
 
-2. Start the development server:
-   bash
+2. **Start the development server**:
+
    python manage.py runserver
 
-3. The API will be available at `http://localhost:8000/`.
-
-### Docker Deployment
-
-- A Dockerfile is included for easy deployment. To run the project using Docker:
-
-  1. Build the Docker image:
-
-     ```
-     bash
-     docker build -t ema-backend .
-
-     ```
-
-  2. Run the Docker container:
-     ```
-     bash
-     docker run -p 8000:8000 ema-backend
-     ```
+3. **The API will be available at** `http://localhost:8000/`.
 
 ## API Endpoints
 
